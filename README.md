@@ -92,7 +92,7 @@ A interface do sensor, assim como o “Controlador”, é uma máquina de estado
 
 <strong>S0:</strong> Estágio da máquina de estados que representa a borda de subida do sinal em que o SBC envia para o sensor para que ele saiba que está sendo solicitado. Possui um contador que conta a cada pulso de clock, caso o contador passe de 900000, segue para o próximo estado.
 
-<strong>S1:<strong> Simboliza a borda de descida do sinal em que o SBC envia para o sensor, espera por mais 900000 clocks, e segue para o próximo estágio.
+<strong>S1:</strong> Simboliza a borda de descida do sinal em que o SBC envia para o sensor, espera por mais 900000 clocks, e segue para o próximo estágio.
 
 <strong>S2:</strong> Espera 1000 clocks, troca a direção do pino bidirecional de Out para In e logo em seguida, troca de estado.
 
