@@ -1,19 +1,5 @@
 # Sistemas_digitais-Comunicacao-serial 
  Repositorio do problema 2 do MI sistemas digitais
-<<<<<<< HEAD
-<h1>Começando pessoal</h1>
-<img src ="imagens/imagem3.png">
-
-<img src ="imagens/requisicao.png">
-
-<img src ="imagens/resposta.png">
-
-<img src ="imagens/imagem1.png">
-
-<img src ="imagens/imagem6.png">
-
-<img src ="imagens/imagem5.png">
-=======
  
 <h1>Apresentação do sistema</h1>
 O sistema proposto realiza a implementação de um protocolo de comunicação entre a Raspberry e a FPGA. 
@@ -29,9 +15,9 @@ A imagem a seguir descreve em alto nível uma visão dos componentes do sistema 
 <img src ="imagens/imagem3.png">
 
 <h1>Single Board Computer (SBC)</h1>
-Para a implementação do SBC, foi necessário realizar a configuração da UART. Utilizou-se as bibliotecas unistd, fcntl e termios, seguindo os passos:
+Para a implementação do SBC, foi necessário realizar a configuração da UART. Utilizou-se as bibliotecas <strong>unistd, fcntl e termios</strong>, seguindo os passos:
 <ul>
-<li>Abertura do arquivo da uart: utiliza a função open(“/dev/serial0”, tipos de abertura). Os tipos de abertura foram O_RDWR, O_NOCTTY, O_NDELAY. Que abre no modo de leitura/gravação sem bloqueio;</li>
+<li>Mapeamento da memória da uart: utiliza a função open(“/dev/serial0”, tipos de abertura). Os tipos de abertura foram <i>O_RDWR, O_NOCTTY, O_NDELAY</i>, que abre no modo de leitura/gravação sem bloqueio;</li>
 <li>E a configuração das flags, como valor de baud-rate, habilitação de paridade, tipo de paridade;</li>
  </ul>
 
@@ -46,4 +32,3 @@ Para a leitura de dados enviados pela FPGA, a função read foi utilizada, que t
  
 As respostas recebidas podem ser compostas por 1 byte ou 3 bytes. As respostas relacionadas à situação do sensor possuem 1 byte que é composto pelo código de resposta. As respostas sobre a medição de temperatura ou/e umidade possuem 1 byte que indica o código de resposta, 1 byte da parte inteira e 1 byte da parte fracionária da medida. Ao receber a resposta, o SBC analisa o código recebido e exibe na tela a descrição correspondente ao código, e se houver dado de medida dos sensores exibe na tela.
  <img src ="imagens/resposta.png">
->>>>>>> 429df965496eb45b31a2a001c50a2d4718947f29
