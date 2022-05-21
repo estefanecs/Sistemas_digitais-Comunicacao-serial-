@@ -66,7 +66,7 @@ O controlador é a máquina de estados utilizada para o controle dos módulos im
 
 O controlador possui 5 estados de operação: espera, recebendo mensagem,leitura sensor, transmissão mensagem e erro.
 
-<strong>ESPERA:</strong>No estado de espera a FPGA fica aguardando receber uma requisição do SBC via comunicação serial, Nesse estado o receptor fica habilitado para receber dados e o transmissor sempre desabilitado, uma mudança de estado ocorre quando é identificada quando o receptor está recebendo uma mensagem.
+<strong>ESPERA:</strong> No estado de espera a FPGA fica aguardando receber uma requisição do SBC via comunicação serial, Nesse estado o receptor fica habilitado para receber dados e o transmissor sempre desabilitado, uma mudança de estado ocorre quando é identificada quando o receptor está recebendo uma mensagem.
 
 <strong>RECEBENDO_MENSAGEM:</strong> No estado de recepção, o receptor <i>(uart_rx)</i> recebe as requisições do SBC e armazena no registrador de saída do módulo receptor. No escopo do sistema o SBC sempre irá enviar dois bytes de requisição para a FPGA, assim  no estado de recepção sempre serão esperadas duas mensagens do SBC, uma contendo o comando e outra o endereço do sensor, que são registradas no <i>registrador_comando</i> e <i>registrador_endereço</i>. Existem dois cenários para mudança de estado, primeiro quando a transmissão do SBC é finalizada e pacote de dados foi recebido com sucesso assim a FPGA pode seguir para o próximo estado do processo e no segundo cenário quando ocorre um erro na recepção o controlador passa para o estado de erro.
 <strong>LEITURA_SENSOR:</strong> No estado de leitura do sensor o controlador libera o comando para a interface do sensor identificado pelo endereço usando o demultiplexador, o comando que a interface do sensor recebe informa qual o dado ela irá selecionar ou um verificação do estado do sensor, o controlador espera a operação da interface ser finalizada e então seleciona a interface do sensor identificado pelo endereço usando o multiplexador que envia os dados para o registrador de mensagens, o registrador mensagens tem capacidade para três bytes <i>(Comando_Resposta + Byte_dados1 + Byte_dados2)</i> após os dados serem inscritos o controlador passa para o estado de transmissão, caso ocorra um erro durante a leitura do sensor o controlador passa para o estado de erro.
@@ -93,7 +93,7 @@ A interface do sensor, assim como o “Controlador”, é uma máquina de estado
 
 <strong>S1:<strong> Simboliza a borda de descida do sinal em que o SBC envia para o sensor, espera por mais 900000 clocks, e segue para o próximo estágio.
 
-<strong>S2:</strong>Espera 1000 clocks, troca a direção do pino bidirecional de Out para In e logo em seguida, troca de estado.
+<strong>S2:</strong> Espera 1000 clocks, troca a direção do pino bidirecional de Out para In e logo em seguida, troca de estado.
 
 <strong>S3:</strong> Enquanto o contador é menor que 3000 e o pino de entrada de dados do sensor estiver alto, continua em seu estado. Caso o contador seja igual ou maior que 3000 mas ele ainda esteja recebendo algum sinal no pino de entrada de dados, segue para o estado de <strong>erro.</strong> Caso tudo ocorra normalmente, segue para o próximo estado.
 
