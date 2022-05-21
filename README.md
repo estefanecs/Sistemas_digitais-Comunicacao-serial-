@@ -124,7 +124,7 @@ Procedimentos:
 </ol>
 Resultados: foi selecionada a opção 1 sensor e o tipo de informação como temperatura, opção 2. As opções foram convertidas no código equivalente, enviadas e recebidas corretamente, como mostrado na imagem abaixo.
 
-<img src ="imagens/sbc1.png">
+<img src ="imagens/sbc.png">
 <strong>Caso 3: Seleção errada de opções do menu.</strong>
 <ol>
 <li>Seleção do sensor, informando opção inválida inteira;</li>
@@ -153,3 +153,30 @@ Para comunicação serial entre a SBC e a FPGA foi necessário utilizar uma UART
 UART utilizada é composta pelos módulos <i>uart_rx</i> e <i>uart_tx</i> o receptor e transmissor respectivamente. A UART utilizada, foi a disponibilizada por nandland.com podendo ser verificado no link: https://www.nandland.com/vhdl/modules/module-uart-serial-port-rs232.html
 	
 Foram realizadas apenas algumas alterações no código utilizado e as atribuições ao autor estão presentes.
+
+<h3>Sensor</h3>
+Para recebermos os dados do sensor, foi preciso criar uma enorme máquina de estados, contudo, devemos testar o seu funcionamento de maneira correta, já que com ela, nós trabalhamos conforme os timings do sensor DHT11, que variam do milissegundo ao microssegundo.
+
+<strong>Caso 1 (sensor não responda ao start signal):</strong>
+<ol>
+<li>A fpga envia um sinal no Enable da interface do sensor (Sinal deve se manter alto durante todo o processo);</li>
+<li>Após 20 ms, é esperado que um sinal de nível lógico BAIXO seja recebido pela interface (o sinal de resposta do sensor);</li>
+<li>Como não é recebido nada, vai para o estado STOP com o output erro ALTO.</li>
+</ol>
+
+<strong>Caso 2 (A interface não recebe os bits de dados do sensor):</strong>
+<ol>
+<li>A partir do estado S6, após o tempo de espera, o sensor deve enviar um sinal Alto;</li>
+<li>Se o sinal alto for após 26~28us, o sinal significa 0 , se for após 70us, sinal 1;</li>
+<li>Nesse caso, ocorre um "Timeout" e nenhum bit é recebido vai para o STOP com um sinal alto na saída de erro.</li>
+</ol>.
+<strong>Caso 3 (O sensor e a interface funcionam corretamente):</strong>
+<ol>
+<li>A FPGA envia um sinal de Enable para a interface do sensor (deve ser mantida alta durante todo o processo);</li>
+<li>A interface, enquanto em uso , mantém o sinal WAIT ativo;</li>
+<li>Quando o sinal WAIT for baixo, a interface já está com os dados prontos na sua saída de dados.</li>
+</ol>
+<h3>Conexão entre SBC e FPGA</h3>
+<h3>Conexão geral do sistema</h3>
+
+
