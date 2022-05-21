@@ -29,7 +29,7 @@ De acordo com as opções selecionadas, a requisição é enviada pela UART da R
 <img src ="imagens/requisicao.png">
 
 O envio de dados pela UART é feito utilizando a função write, no qual deve se indica o endereço do arquivo de mapeamento, o dado a ser enviado, e o tamanho do dado:
-	<strong>write(enderecoArquivo,dado,tamanhoDado);</strong>
+	```s write(enderecoArquivo,dado,tamanhoDado);´´´´
 
 Para a leitura de dados enviados pela FPGA, a função read foi utilizada, que tem como parâmetros o endereço do arquivo da uart, o buffer para armazenar o dado a ser lido e o número máximo de bits a serem lidos. A função retorna o tamanho de bits lidos. 
  <strong>read(enderecoArquivo,buffer,tamanhoMaximo);</strong>
