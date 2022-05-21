@@ -147,3 +147,10 @@ Resultado: Os comandos enviados foram devidamente codificados.
 
 <img src ="imagens/sbc3.png">
 
+<h3>UART FPGA</h3>
+Para comunicação serial entre a SBC e a FPGA foi necessário utilizar uma UART (Universal Asynchronous Receiver / Transmitter) um circuito transmissor/receptor  assíncrono que é configurado para frequência de  baud rate dos dispositivos que vai se comunicar.
+
+UART utilizada é composta pelos módulos <i>uart_rx</i> e <i>uart_tx</i> o receptor e transmissor respectivamente. A UART utilizada, foi a disponibilizada por nandland.com podendo ser verificado no link abaixo:
+<a href= “https://www.nandland.com/vhdl/modules/module-uart-serial-port-rs232.html”>código da uart da FPGA</a>
+	
+Foram realizadas apenas algumas alterações no código utilizado e as atribuições ao autor estão presentes.
