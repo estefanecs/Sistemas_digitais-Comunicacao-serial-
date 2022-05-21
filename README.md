@@ -110,3 +110,39 @@ A interface do sensor, assim como o “Controlador”, é uma máquina de estado
 <strong>S9:</strong> Soma 1 ao contador que indica qual posição do Bit e segue para o estado <strong>S6</strong>.
  
 <strong>STOP:</strong> Se chegou aqui pelo “estado” de erro, conta por 1600000 ciclos, limpa a saída de dados, após esse período, desativa o sinal de erro. Caso chegue aqui sem o sinal de erro, limpa todas as saídas e contadores, após isso, aguarda o sinal de RST.
+	
+<h1>Descrição e análise dos testes e simulações realizadas</h1>
+<h3>SBC</h3>
+Para verificar o funcionamento do TX e RX do SBC, foi realizado o teste de loopback. Analisando se os dados enviados eram recebidos, o que comprova que o envio e recebimento de dados está funcionando.
+<strong>Caso 1: Envio de 2 bytes</strong>
+Procedimentos:
+<ol>
+<li>Seleção do sensor DHT11;</li>
+<li>Seleção do tipo de informação;</li>
+<li>Verificação se o dado enviado é o mesmo recebido.</li>
+<ol>
+Resultados: foi selecionada a opção 1 sensor e o tipo de informação como temperatura, opção 2. As opções foram convertidas no código equivalente, enviadas e recebidas corretamente, como mostrado na imagem abaixo.
+
+<img src ="imagens/imagem2.png">
+<strong>Caso 3: Seleção errada de opções do menu.</strong>
+<ol>
+<li>Seleção do sensor, informando opção inválida inteira;</li>
+<li>Seleção da informação com opção inválida inteira;</li>
+<li>É solicitado que se insira um valor dentro das opções possíveis.</li>
+<ol>
+Resultado: Ao selecionar uma opção inválida, o SBC não envia as requisições e aguarda que seja inserida uma opção correta. 
+
+<img src ="imagens/imagem2.png">
+<strong>Caso 2: Envio do código de resposta para simular um dado recebido e verificar a decodificação dos comandos.</strong>
+Procedimentos: 
+<ol>
+<li>Envio do código de resposta de erro: 0x1F.
+<li>Envio do código de resposta de funcionamento: 0x00;</li>
+<li>Envio do código de resposta de umidade: 0x01;</li>
+<li>Envio do código de resposta de temperatura: 0x02.</li>
+<ol>
+Resultado: Os comandos enviados foram devidamente codificados.
+
+
+<img src ="imagens/imagem2.png">
+
