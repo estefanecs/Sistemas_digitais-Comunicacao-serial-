@@ -9,55 +9,66 @@ module Main #(
 		// que é calculado: CLKS_PER_BIT = (Frequency of i_Clock)/(Frequency of UART)
 		// Para a configuração utilizada 50 MHz Clock, 115200 baud UART
 		//(50000000)/(115200) = 457
-		parameter CLKS_PER_BIT = 434
+			parameter CLKS_PER_BIT = 434
 	)(
-		input wire     Clock,		// clock de entrada da placa
-		
-		// entradas do módulo uartRx
-		input   i_Rx_Serial,  // entrada de dados
-		
-		// Saidas do módulo uartRx
-		output       o_Rx_DV,	// Não sei
-		output [7:0] o_Rx_Byte,		// Byte recebido pelo receptor
-		
-		// Entradas do módulo uartTx
-		input       i_Tx_DV,			// Não sei
-		input [7:0] i_Tx_Byte, 		// Byte da menssagem a ser enviada
-		
-		// Saidas do módulo uartRx
-		output      o_Tx_Active,	// Sinal indicando que uma transmissão está acontecendo
-		output      o_Tx_Serial,	// Saida serial da menssagem
-		output      o_Tx_Done		// Sinal indicando que ma tranmissão foi realizada e finalizada
+			input wire     Clock,		// clock de entrada da placa
+			input wire  		i_Rx_Serial,  // entrada de dados
+			output      o_Tx_Serial,	// Saida serial da menssagem
+			output reg [2:0] rgb
 		);
 		
-	// mensagem de teste
-		reg [7:0] mensagem = 8'b00001111;
-	// instanciando módulo uartRx
-	
-	wire rx,tx;
-	
-	uart_rx #(
-		.CLKS_PER_BIT(CLKS_PER_BIT)
-		)receptor 
-		(
+		// Saidas do módulo uartRx
+		wire rx_done;
+		wire [7:0] rx_byte;
+		
+		// Entradas do módulo uartTx
+		 wire tx_en;
+		 wire [7:0] tx_byte;
+		// Saidas do módulo uartRx
+		wire tx_active;
+		wire tx_done;
+		
+		// registradores
+		reg rx_on;
+		reg tx_on, tx_Odone;
+		
+		//variavel da maquina de estados
+		reg [2:0] SM_control;
+		
+		// instanciando módulo uartRx
+		uart_rx #(
+		 .CLKS_PER_BIT(CLKS_PER_BIT) 
+		 ) receptor (
 		.i_Clock(Clock),
-		.i_Rx_Serial(rx),
-		.o_Rx_DV(o_Rx_DV),
-		.o_Rx_Byte(o_Rx_Byte)
+		.i_Rx_Serial(i_Rx_Serial),
+		.o_Rx_DV(rx_done),
+		.o_Rx_Byte(rx_byte)
 	);
 	
 	// instanciando módulo uartTx
 	uart_tx #(
 		.CLKS_PER_BIT(CLKS_PER_BIT)
-		)transmissor 
-		(
+		) transmissor( 
 		.i_Clock(Clock),
-		.i_Tx_DV(i_Tx_DV),
-		.i_Tx_Byte(i_Tx_Byte),
-		.o_Tx_Active(o_Tx_Active),
-		.o_Tx_Serial(tx),
-		.o_Tx_Done(o_Tx_Done)
+		.i_Tx_DV(tx_en),
+		.i_Tx_Byte(tx_byte),
+		.o_Tx_Active(tx_active),
+		.o_Tx_Serial(o_Tx_Serial),
+		.o_Tx_Done(tx_done)
 	);
 	
+	initial begin
+		rx_on <= rx_done;
+		tx_on <= tx_active;
+		tx_Odone <= tx_done;
+		tx_byte = 8'b00001111;
+		rgb =3'b000;
+		tx_en <=1;
+	end
 		
+	always@(posedge Clock) begin
+		if(rx_byte == 8'b00001111)
+			rgb = 3'b100;
+	end
+	
 endmodule
