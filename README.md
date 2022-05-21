@@ -40,39 +40,40 @@ As respostas recebidas podem ser compostas por 1 byte ou 3 bytes. As respostas r
  <img src ="imagens/resposta.png">
  
  <h1>FPGA</h1>
-A FPGA foi utilizada para o controle dos sensores e envio dos dados para a SBC. é possível conectar até 32 sensores na FPGA cada um com sua respectiva interface de controle e comunicação atendendo a modularização do sistema, o módulo na FPGA recebe as requisições da  raspberry e após decodificar o comando recebido, executa o comando e envia a resposta da requisição para o SBC.
+A FPGA foi utilizada para o controle dos sensores e envio dos dados para a SBC. é possível conectar até 32 sensores na FPGA, cada um com sua respectiva interface de controle e comunicação atendendo a modularização do sistema. O módulo na FPGA recebe as requisições da  raspberry e após decodificar o comando recebido, executa o comando e envia a resposta da requisição para o SBC.
 
 Abaixo temos o diagrama de blocos do sistema implementado na FPGA.
 <img src ="imagens/imagem1.png">
 
 Os módulos <strong>uart_rx</strong> e <strong>uart_tx</strong> são responsáveis pela comunicação com a SBC estando configurados na mesma frequência de baud rate que o SBC e padrão de pacote de dados :
 <ul>
-<li><strong>uart_rx:</strong>  recebe as requisições do SBC, ele recebe o pacote de dados  decodificando o start_bit,bit e bit de parada recebidos em comunicação serial e apresenta na saída em paralelo o byte recebido.</li>
-<li><strong>uart_tx:</strong> transmite para o SBC as respostas as requisições recebidas, o pacote de dados é enviado a partir de uma entrada em paralelo que transmite a mensagem em serial codificando o pacote de dados para o padrão de comunicação uart.</li>
+<li><strong>uart_rx:</strong> recebe as requisições do SBC. Recebe o pacote de dados em comunicação serial, decodifica o <i>start_bit</i> e <i>bit de parada</i>, e apresenta na saída o byte em paralelo.</li>
+<li><strong>uart_tx:</strong> transmite para o SBC as respostas das requisições recebidas. O pacote de dados é enviado a partir de uma entrada em paralelo que transmite a mensagem em serial, codificando o pacote de dados para o padrão de comunicação da UART.</li>
 </ul>
 
-Como o sistema pode se comunicar com até 32 sensores, são utilizados dois circuitos combinacionais aplicados um multiplexador e um demultiplexador:
+Como o sistema pode se comunicar com até 32 sensores, são utilizados dois circuitos combinacionais: aplicados um multiplexador e um demultiplexador:
 <ul>
-<li><strong>Multiplexador</strong>:O multiplexador é utilizado para selecionar qual  sensor vai ser lido e a leitura enviada para transmissão, o multiplexador possui 32 entradas de  8 bits e uma saída de  8 bits, a variável de seleção é o endereço referente ao sensor que é recebido via SBC.</li>
-<li><strong>Demultiplexador:</strong> O demultiplexador é utilizado para enviar o comando recebido do SBC para a interface do sensor referente a ser utilizado, o demux possui um entrada de 8 bits de dados para 32 saídas de 8 bits, a variável de seleção é o endereço referente ao sensor que é recebido do SBC</li>
+<li><strong>Multiplexador</strong>: é utilizado para selecionar qual  sensor vai ser lido e a leitura enviada para transmissão. O multiplexador possui 32 entradas de  8 bits e uma saída de 8 bits, a variável de seleção é o endereço referente ao sensor que é recebido via SBC.</li>
+<li><strong>Demultiplexador:</strong> é utilizado para enviar o comando recebido do SBC para a interface do sensor referente a ser utilizado. O demux possui um entrada de 8 bits de dados para 32 saídas de 8 bits, a variável de seleção é o endereço referente ao sensor que é recebido do SBC</li>
 </ul>
-Seguindo o protocolo de comunicação definido para o sistema a FPGA transmite as respostas para a SBC com mensagens de 8 bits de tamanho no modelo de <i>CODIGO+DADO_SENSOR</i>, assim, para armazenar as mensagens que a serem transmitidas foi utilizado um registrador de deslocamento:
+Seguindo o protocolo de comunicação definido para o sistema a FPGA transmite as respostas para O SBC com mensagens de 8 bits de tamanho, no modelo de <i>CODIGO+DADO_SENSOR</i>. Assim, para armazenar as mensagens que serão transmitidas, foi utilizado um registrador de deslocamento:
 <ul>
-<li><strong>registrador_mensagem:</strong> O registrador de deslocamento recebe os bytes que vão ser transmitidos para a SBC, o registrador tem capacidade para 3 bytes, definido que toda transmissão vai ter ao menos 1 byte para código de resposta da requisição e até 2 bytes de dados, o byte do código de resposta é escrito pelo controlador e os bytes de dados são recebidos a partir do multiplexador dos sensores.</li>
+<li><strong>registrador_mensagem:</strong> O registrador de deslocamento recebe os bytes que serão transmitidos para o SBC, e tem capacidade para 3 bytes, definido que toda transmissão vai ter ao menos 1 byte para código de resposta da requisição e até 2 bytes de dados. O byte do código de resposta é escrito pelo controlador e os bytes de dados são recebidos a partir do multiplexador dos sensores.</li>
 </ul>
 
-Atendendo a modularização qualquer sensor pode ser inserido junto com sua interface, desde que atenda as especificações dadas nas observações, cada sensor deve ser conectado a sua interface e as interfaces são ligadas ao multiplexador e demultiplexador para a comunicação e controle.
+Atendendo a modularização qualquer sensor pode ser inserido junto com sua interface, desde que atenda as especificações dadas nas observações. Desta forma, cada sensor deve ser conectado a sua interface e as interfaces são ligadas ao multiplexador e demultiplexador para a comunicação e controle.
 
 <h1>Controlador</h1>
 O controlador é a máquina de estados utilizada para o controle dos módulos implementados na FPGA, abaixo temos o diagrama de estados com abstrações para facilitar a leitura.
 
 <img src ="imagens/imagem6.png">
 
-O controlador possui 5 estados de operação: espera, recebendo mensagem,leitura sensor, transmissão mensagem e erro.
+O controlador possui 5 estados de operação: espera, recebendo mensagem, leitura do sensor, transmissão mensagem e erro.
 
 <strong>ESPERA:</strong> No estado de espera a FPGA fica aguardando receber uma requisição do SBC via comunicação serial, Nesse estado o receptor fica habilitado para receber dados e o transmissor sempre desabilitado, uma mudança de estado ocorre quando é identificada quando o receptor está recebendo uma mensagem.
 
 <strong>RECEBENDO_MENSAGEM:</strong> No estado de recepção, o receptor <i>(uart_rx)</i> recebe as requisições do SBC e armazena no registrador de saída do módulo receptor. No escopo do sistema o SBC sempre irá enviar dois bytes de requisição para a FPGA, assim  no estado de recepção sempre serão esperadas duas mensagens do SBC, uma contendo o comando e outra o endereço do sensor, que são registradas no <i>registrador_comando</i> e <i>registrador_endereço</i>. Existem dois cenários para mudança de estado, primeiro quando a transmissão do SBC é finalizada e pacote de dados foi recebido com sucesso assim a FPGA pode seguir para o próximo estado do processo e no segundo cenário quando ocorre um erro na recepção o controlador passa para o estado de erro.
+
 <strong>LEITURA_SENSOR:</strong> No estado de leitura do sensor o controlador libera o comando para a interface do sensor identificado pelo endereço usando o demultiplexador, o comando que a interface do sensor recebe informa qual o dado ela irá selecionar ou um verificação do estado do sensor, o controlador espera a operação da interface ser finalizada e então seleciona a interface do sensor identificado pelo endereço usando o multiplexador que envia os dados para o registrador de mensagens, o registrador mensagens tem capacidade para três bytes <i>(Comando_Resposta + Byte_dados1 + Byte_dados2)</i> após os dados serem inscritos o controlador passa para o estado de transmissão, caso ocorra um erro durante a leitura do sensor o controlador passa para o estado de erro.
 
 <strong>TRANSMISSAO_MENSAGEM:</strong> No estado de tranmissão o controlador habilita uart_tx para transmitir os dados no registrador mensagem, existem dois cenários já configurados para o envio de mensagens, primeiro é transmitido um único byte que é o comando de resposta para o SBC e um segundo cenário são enviados três bytes <i>( Comando_Resposta + Byte_dados1 + Byte_dados2)</i>, se ocorrer um erro durante a transmissão o controlador passa para o estado de erro.
