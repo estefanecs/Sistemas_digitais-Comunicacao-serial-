@@ -63,6 +63,7 @@ Atendendo a modularização qualquer sensor pode ser inserido junto com sua inte
 O controlador é a máquina de estados utilizada para o controle dos módulos implementados na FPGA, abaixo temos o diagrama de estados com abstrações para facilitar a leitura.
 
 <img src ="imagens/imagem6.png">
+
 O controlador possui 5 estados de operação: espera, recebendo mensagem,leitura sensor, transmissão mensagem e erro.
 
 <strong>ESPERA:</strong>No estado de espera a FPGA fica aguardando receber uma requisição do SBC via comunicação serial, Nesse estado o receptor fica habilitado para receber dados e o transmissor sempre desabilitado, uma mudança de estado ocorre quando é identificada quando o receptor está recebendo uma mensagem.
@@ -73,3 +74,39 @@ O controlador possui 5 estados de operação: espera, recebendo mensagem,leitura
 <strong>TRANSMISSAO_MENSAGEM:</strong> No estado de tranmissão o controlador habilita uart_tx para transmitir os dados no registrador mensagem, existem dois cenários já configurados para o envio de mensagens, primeiro é transmitido um único byte que é o comando de resposta para o SBC e um segundo cenário são enviados três bytes <i>( Comando_Resposta + Byte_dados1 + Byte_dados2)</i>, se ocorrer um erro durante a transmissão o controlador passa para o estado de erro.
 
 <strong>ERRO:</strong> No estado de erro oriundo das situações de erro encontradas durante o processo na FPGA, o controlador escreve no registrador de mensagem o comando de resposta para erro na FPGA e então transmite para o SBC.
+
+<h1>Interface do sensor</h1>
+A interface do sensor, assim como o “Controlador”, é uma máquina de estados que se comunica com o sensor DHT11 e retorna suas informações de temperatura e umidade, assim como se ocorreu algum erro. Na figura abaixo, temos o diagrama simplificado de estados da máquina de estados da interface para o sensor.
+
+<img src ="imagens/imagem5.png">
+<strong>Observações:</strong>
+<ul>
+<li>O EN precisa estar habilitado o tempo todo em que se envia e recebe o sinal do DHT11.
+Após chegar no STOP, é preciso enviar um sinal ao RST (reset) para que a máquina de estados volte ao START.
+Alguns estados possuem variáveis interna. somente as mais importantes foram representadas no diagrama.
+O estado de erro é representado pela ida ao estado STOP com um output no error_REG.
+</ul>
+.
+<strong>START:</strong> Funciona para enviar sinais de saída que indicam que a máquina de estados está ocupada, a direção do pino bidirecional para output e envia um sinal alto por este pino. Após isso, ela segue para o próximo estado.
+
+<strong>S0:</strong> Estágio da máquina de estados que representa a borda de subida do sinal em que o SBC envia para o sensor para que ele saiba que está sendo solicitado. Possui um contador que conta a cada pulso de clock, caso o contador passe de 900000, segue para o próximo estado.
+
+<strong>S1:<strong> Simboliza a borda de descida do sinal em que o SBC envia para o sensor, espera por mais 900000 clocks, e segue para o próximo estágio.
+
+<strong>S2:</strong>Espera 1000 clocks, troca a direção do pino bidirecional de Out para In e logo em seguida, troca de estado.
+
+<strong>S3:</strong> Enquanto o contador é menor que 3000 e o pino de entrada de dados do sensor estiver alto, continua em seu estado. Caso o contador seja igual ou maior que 3000 mas ele ainda esteja recebendo algum sinal no pino de entrada de dados, segue para o estado de <strong>erro.</strong> Caso tudo ocorra normalmente, segue para o próximo estado.
+
+<strong>S4:</strong> Estado que simboliza o tempo de espera em que aguardamos para o sensor nos enviar o seu pulso de sincronismo. Aguardamos por 4400 ciclos de clock. Caso o sinal de sincronismo não seja recebido, segue para o estado de <strong>erro.</strong> Caso tudo ocorra normalmente, segue para o próximo estado.
+
+<strong>S5:</strong> Estado que simboliza o tempo de espera em que aguardamos para o sensor nos enviar o seu pulso de sincronismo, neste caso, a borda de descida. Aguardamos por 4400 ciclos de clock. Caso o sinal de sincronismo ainda esteja alto, segue para o estado de <strong>erro</strong>. Caso ele já esteja baixo, segue para o próximo estado.
+
+<strong>S6:</strong> Se o sinal do sensor DHT11 estiver baixo, segue para o próximo estado. Caso seja alto, vá para o estado de <strong>erro</strong>.
+
+<strong>S7:</strong> Espera o sinal de dados do DHT11 por 1600000 ciclos de clock, caso esse contador chegue ao fim, vá para o estado de <strong>erro</strong>. Se chegou algum sinal do DHT11, vá para o próximo estado.
+ 
+<strong>S8:</strong> Estado que simboliza a decisão entre 0 e 1 do sinal que chega do DHT11, e o insere em sua posição correta (40 bits). Também verifica se nenhum bit chegou, nesses casos, segue para o estado de <strong>erro</strong>. Caso o contador ainda seja menor que 39 (número de bits que o DHT11 envia, começando do Bit 0), vá para o estado <strong>S9</strong>. Caso seja maior ou igual a 39, segue para o estado de <strong>erro</strong>.
+
+<strong>S9:</strong> Soma 1 ao contador que indica qual posição do Bit e segue para o estado <strong>S6</strong>.
+ 
+<strong>STOP:</strong> Se chegou aqui pelo “estado” de erro, conta por 1600000 ciclos, limpa a saída de dados, após esse período, desativa o sinal de erro. Caso chegue aqui sem o sinal de erro, limpa todas as saídas e contadores, após isso, aguarda o sinal de RST.
