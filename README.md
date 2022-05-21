@@ -169,14 +169,17 @@ Para recebermos os dados do sensor, foi preciso criar uma enorme máquina de est
 <li>A partir do estado S6, após o tempo de espera, o sensor deve enviar um sinal Alto;</li>
 <li>Se o sinal alto for após 26~28us, o sinal significa 0 , se for após 70us, sinal 1;</li>
 <li>Nesse caso, ocorre um "Timeout" e nenhum bit é recebido vai para o STOP com um sinal alto na saída de erro.</li>
-</ol>.
+</ol>
+
 <strong>Caso 3 (O sensor e a interface funcionam corretamente):</strong>
 <ol>
 <li>A FPGA envia um sinal de Enable para a interface do sensor (deve ser mantida alta durante todo o processo);</li>
 <li>A interface, enquanto em uso , mantém o sinal WAIT ativo;</li>
 <li>Quando o sinal WAIT for baixo, a interface já está com os dados prontos na sua saída de dados.</li>
 </ol>
+
 <h3>Conexão entre SBC e FPGA</h3>
+
 <h3>Conexão geral do sistema</h3>
 
 
