@@ -42,7 +42,7 @@ O envio de dados pela UART é feito utilizando a função write, no qual deve se
 	<strong>write(enderecoArquivo,dado,tamanhoDado);<strong>
 
 Para a leitura de dados enviados pela FPGA, a função read foi utilizada, que tem como parâmetros o endereço do arquivo da uart, o buffer para armazenar o dado a ser lido e o número máximo de bits a serem lidos. A função retorna o tamanho de bits lidos. 
- <strong>read(enderecoArquivo,buffer,tamanhoMaximo);</syrong>
+ <strong>read(enderecoArquivo,buffer,tamanhoMaximo);</strong>
  
 As respostas recebidas podem ser compostas por 1 byte ou 3 bytes. As respostas relacionadas à situação do sensor possuem 1 byte que é composto pelo código de resposta. As respostas sobre a medição de temperatura ou/e umidade possuem 1 byte que indica o código de resposta, 1 byte da parte inteira e 1 byte da parte fracionária da medida. Ao receber a resposta, o SBC analisa o código recebido e exibe na tela a descrição correspondente ao código, e se houver dado de medida dos sensores exibe na tela.
  <img src ="imagens/resposta.png">
