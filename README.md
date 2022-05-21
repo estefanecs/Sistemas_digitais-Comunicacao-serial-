@@ -81,12 +81,12 @@ A interface do sensor, assim como o “Controlador”, é uma máquina de estado
 <img src ="imagens/imagem5.png">
 <strong>Observações:</strong>
 <ul>
-<li>O EN precisa estar habilitado o tempo todo em que se envia e recebe o sinal do DHT11.
-Após chegar no STOP, é preciso enviar um sinal ao RST (reset) para que a máquina de estados volte ao START.
-Alguns estados possuem variáveis interna. somente as mais importantes foram representadas no diagrama.
-O estado de erro é representado pela ida ao estado STOP com um output no error_REG.
+<li>O EN precisa estar habilitado o tempo todo em que se envia e recebe o sinal do DHT11;</li>
+<li>Após chegar no STOP, é preciso enviar um sinal ao RST (reset) para que a máquina de estados volte ao START;</li>
+<li>Alguns estados possuem variáveis interna. somente as mais importantes foram representadas no diagrama;</li>
+<li>O estado de erro é representado pela ida ao estado STOP com um output no error_REG.</li>
 </ul>
-.
+
 <strong>START:</strong> Funciona para enviar sinais de saída que indicam que a máquina de estados está ocupada, a direção do pino bidirecional para output e envia um sinal alto por este pino. Após isso, ela segue para o próximo estado.
 
 <strong>S0:</strong> Estágio da máquina de estados que representa a borda de subida do sinal em que o SBC envia para o sensor para que ele saiba que está sendo solicitado. Possui um contador que conta a cada pulso de clock, caso o contador passe de 900000, segue para o próximo estado.
