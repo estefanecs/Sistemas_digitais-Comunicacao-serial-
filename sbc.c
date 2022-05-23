@@ -124,6 +124,9 @@ int main(){
 					uart_rx(uart_filestream,dado); //Recebe o valor da temperatura
 					printf("%s ",dado); //Imprime valor da temperatura
 			 	}
+				else{
+					printf("Erro no formato de dado recebido);
+				}
 			}
 		}
 		else{
