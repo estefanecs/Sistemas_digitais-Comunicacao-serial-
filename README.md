@@ -119,6 +119,7 @@ A interface do sensor, assim como o <i>Controlador</i>, é uma máquina de estad
 <h1>Descrição e análise dos testes e simulações realizadas</h1>
 <h3>SBC</h3>
 Para verificar o funcionamento do TX e RX do SBC, foi realizado o teste de loopback. Analisando se os dados enviados eram recebidos, o que comprova que o envio e recebimento de dados está funcionando.
+<br>
 <strong>Caso 1: Envio de 2 bytes</strong>
 <br>
 Procedimentos:
@@ -140,6 +141,7 @@ Resultado: Ao selecionar uma opção inválida, o SBC não envia as requisiçõe
 
 <img src ="imagens/sbc2.png">
 <strong>Caso 2: Envio do código de resposta para simular um dado recebido e verificar a decodificação dos comandos.</strong>
+<br>
 Procedimentos: 
 <ol>
 <li>Envio do código de resposta de erro: 0x1F.
