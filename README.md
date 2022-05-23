@@ -18,7 +18,7 @@ A imagem a seguir descreve em alto nível uma visão dos componentes do sistema 
 Para a implementação do SBC, foi necessário realizar a configuração da UART. Utilizou-se as bibliotecas <strong>unistd, fcntl e termios</strong>, seguindo os passos:
 <ul>
 <li>Mapeamento da memória da uart: utiliza a função open(“/dev/serial0”, tipos de abertura). Os tipos de abertura foram <i>O_RDWR, O_NOCTTY, O_NDELAY</i>, que abre no modo de leitura/gravação sem bloqueio;</li>
-<li>E a configuração das flags, como valor de baud-rate, habilitação de paridade, tipo de paridade;</li>
+<li>E a configuração das flags, como valor de baud-rate de 9600 e sem paridade;</li>
  </ul>
  
 Com a configuração da uart, foi possível realizar as demais configurações do SBC.
@@ -36,7 +36,7 @@ Para a leitura de dados enviados pela FPGA, a função read foi utilizada, que t
 ```s
 read(enderecoArquivo,buffer,tamanhoMaximo);
 ```
-As respostas recebidas podem ser compostas por 2 bytes ou 3 bytes. As respostas relacionadas à situação do sensor possuem 2 bytes que é compostos pelo código de resposta e o tipo de erro. As respostas sobre a medição de temperatura ou/e umidade possuem 1 byte que indica o código de resposta, 1 byte da parte inteira e 1 byte da parte fracionária da medida. Ao receber a resposta, o SBC analisa o código recebido e exibe na tela a descrição correspondente ao código, e se houver dado de medida dos sensores exibe na tela.
+As respostas recebidas podem ser compostas por 1 byte ou 3 bytes. As respostas relacionadas à situação do sensor possuem 1 byte é composto pelo código de resposta. As respostas sobre a medição de temperatura ou/e umidade possuem 1 byte que indica o código de resposta, 1 byte da parte inteira e 1 byte da parte fracionária da medida. Ao receber a resposta, o SBC analisa o código recebido e exibe na tela a descrição correspondente ao código, e se houver dado de medida dos sensores exibe na tela.
  <img src ="imagens/resposta.png">
  
  <h1>FPGA</h1>
