@@ -29,7 +29,7 @@ int main(){
 	//Struct para configuracao dos parametros de comunicacao
 	struct termios options;
 	tcgetattr(uart_filestream, &options);
-	options.c_cflag = B9600 | CS8 | CLOCAL | CREAD| PARENB | PARODD; //Seta Baud-Rate para 9600, tamanho de 8 bits, habilita paridade e define paridade impar
+	options.c_cflag = B9600 | CS8 | CLOCAL | CREAD; //Seta Baud-Rate para 9600, tamanho de 8 bits e sem paridade
 	options.c_iflag = IGNPAR; //Ignora caracteres com erros de paridade
 	options.c_oflag = 0;
 	options.c_lflag = 0;
