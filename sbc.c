@@ -116,13 +116,13 @@ int main(){
 				}
 			  	else if(strcmp(comandoResposta, "0x01")==0){
 			  		printf("\nMedida de umidade");
-					uart_rx(uart_filestream,dado);
-					printf("%s ",dado);
+					uart_rx(uart_filestream,dado); //Recebe o valor da umidade
+					printf("%s ",dado); //Imprime valor de umidade
 			  	}
 			 	else if(strcmp(comandoResposta, "0x02")==0){
 			 		printf("\nMedida de temperatura");
-					uart_rx(uart_filestream,dado);
-					printf("%s ",dado);
+					uart_rx(uart_filestream,dado); //Recebe o valor da temperatura
+					printf("%s ",dado); //Imprime valor da temperatura
 			 	}
 			}
 		}
