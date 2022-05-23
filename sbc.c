@@ -84,6 +84,7 @@ int main(){
 		switch (sensor){
 		    	case 1:
 		    		//Envia o codigo de endereco do DHT11
+				printf("\nRequisicao sendo enviada. Aguarde uns instantes");
 		   		uart_tx("0x01",uart_filestream); 
 		  	break;
 		    	default:
@@ -91,7 +92,6 @@ int main(){
 				printf("\n1 - DHT11\n");
 				scanf("%i", &sensor);
 		}
-		printf("\nRequisicao sendo enviada. Aguarde uns instantes");
 		sleep(3);
 //----------------------------------------------------------------------------------------------------------------------------------
 //Leitura do byte de codigo de resposta	
@@ -100,10 +100,10 @@ int main(){
 		if (uart_filestream != -1){
 			rx_length = read(uart_filestream, (void*)comandoResposta, 8); //Filestream, buffer para armazenar, numero maximo de bytes lidos
 			if (rx_length < 0){
-				printf("Ocorreu um erro na leitura de dados");
+				printf("\nOcorreu um erro na leitura de dados");
 			}
 			else if (rx_length == 0){
-				printf("Nenhum dado lido");
+				printf("\nNenhum dado lido");
 			}
 			else{
 				//Byte recebido
@@ -162,34 +162,35 @@ void uart_rx(int uart_filestream, char* dado){
 	if (uart_filestream != -1){
 		rx_length = read(uart_filestream, (void*)dadoInteiro, 8); //Filestream, buffer para armazenar, nÃºmero maximo de bytes lidos
 		if (rx_length < 0){
-			printf("Ocorreu um erro na leitura de dados");
+			printf("\nOcorreu um erro na leitura de dados");
 		}
 		else if (rx_length == 0){
-			printf("Nenhum dado lido");
+			printf("\nNenhum dado lido");
 		}
 		else{//Se tem dado lido
 			//Byte recebido
 			dadoInteiro[rx_length] = '\0';
+			//Copia o valor inteiro lido para a string dado
+			strcpy(dado, dadoInteiro);
 		}
 		sleep(1);
 	
 		//leitura do byte de dado 2
 		rx_length = read(uart_filestream, (void*)dadoFracao, 8); //Filestream, buffer para armazenar, numero maximo de bytes lidos
 		if (rx_length < 0){
-			printf("Ocorreu um erro na leitura de dados");
+			printf("\nOcorreu um erro na leitura de dados");
 		}
 		else if (rx_length == 0){
-			printf("Nenhum dado lido");
+			printf("\nNenhum dado lido");
 		}
 		else{
 			//Byte recebido
 			dadoFracao[rx_length] = '\0';
+			//Concatena os valores da parte fracionaria com a inteira da medicao
+			strcat(dado, dadoFracao);
 		}
 	}
 	else{
 		printf("\nFalha na abertura do arquivo");
 	}
-	//Concatena os valores da parte inteira e fracionaria da medicao
-	strcat(dadoInteiro, dadoFracao);
-	strcpy(dado, dadoInteiro);
 }
