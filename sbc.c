@@ -15,18 +15,7 @@ int main(){
 
 	char situacao[]="0x03"; //codigo da situacao aual do sensor.
 	char temperatura[]="0x04"; //codigo da medida de temperatura.
-	char umidade[]="0x05";//codigo da medida de umidade.
-	
-	int repeticaoMenu=0; //controle de repeticao do programa
-	
-    //char* str2 = "3.14159";
- 	//int myint1 = atoi(str1);
- 	
-/* Converte de hexadecimal para inteiro
-char hexstring[7]="04FA56";
-long int numValue;
-numValue = strtol (hexstring , NULL, 16);
-printf("Decimal Valor: % ld " , numValue);*/
+	char umidade[]="0x05";//codigo da medida de umidade.	
     
 //-----------------------------------------------------------------------------------------------------------------------------------
 //Configuracao da UART
@@ -102,7 +91,7 @@ printf("Decimal Valor: % ld " , numValue);*/
 				printf("\n1 - DHT11\n");
 				scanf("%i", &sensor);
 		}
-		sleep(1);
+		sleep(3);
 //----------------------------------------------------------------------------------------------------------------------------------
 //Leitura do byte de codigo de resposta	
 		char dado[9];
