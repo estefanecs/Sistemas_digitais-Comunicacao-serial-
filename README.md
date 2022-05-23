@@ -120,6 +120,7 @@ A interface do sensor, assim como o <i>Controlador</i>, é uma máquina de estad
 <h3>SBC</h3>
 Para verificar o funcionamento do TX e RX do SBC, foi realizado o teste de loopback. Analisando se os dados enviados eram recebidos, o que comprova que o envio e recebimento de dados está funcionando.
 <strong>Caso 1: Envio de 2 bytes</strong>
+<br>
 Procedimentos:
 <ol>
 <li>Seleção do sensor DHT11;</li>
