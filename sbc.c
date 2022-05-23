@@ -91,6 +91,7 @@ int main(){
 				printf("\n1 - DHT11\n");
 				scanf("%i", &sensor);
 		}
+		printf("Requisicao sendo enviada. Aguarde uns instantes");
 		sleep(3);
 //----------------------------------------------------------------------------------------------------------------------------------
 //Leitura do byte de codigo de resposta	
@@ -107,7 +108,6 @@ int main(){
 			else{
 				//Byte recebido
 				comandoResposta[rx_length] = '\0';
-				printf("\n bytes read : %s\n", comandoResposta);
 				if(strcmp(comandoResposta, "0x1F")==0){
 			     	printf("\nO sensor esta com problema");
 			  	}
@@ -167,7 +167,6 @@ void uart_rx(int uart_filestream, char* dado){
 		else{//Se tem dado lido
 			//Byte recebido
 			dadoInteiro[rx_length] = '\0';
-			printf("\n dado inteiro: %s\n", dadoInteiro);
 		}
 		sleep(1);
 	
@@ -182,7 +181,6 @@ void uart_rx(int uart_filestream, char* dado){
 		else{
 			//Byte recebido
 			dadoFracao[rx_length] = '\0';
-			printf("\n bytes read : %s\n",dadoFracao);
 		}
 	}
 	else{
