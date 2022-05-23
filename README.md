@@ -131,7 +131,7 @@ Procedimentos:
 Resultados: foi selecionada a opção 1 sensor e o tipo de informação como temperatura, opção 2. As opções foram convertidas no código equivalente, enviadas e recebidas corretamente, como mostrado na imagem abaixo.
 
 <img src ="imagens/sbc.png">
-<strong>Caso 3: Seleção errada de opções do menu.</strong>
+<strong>Caso 2: Seleção errada de opções do menu.</strong>
 <ol>
 <li>Seleção do sensor, informando opção inválida inteira;</li>
 <li>Seleção da informação com opção inválida inteira;</li>
@@ -140,8 +140,8 @@ Resultados: foi selecionada a opção 1 sensor e o tipo de informação como tem
 Resultado: Ao selecionar uma opção inválida, o SBC não envia as requisições e aguarda que seja inserida uma opção correta. 
 
 <img src ="imagens/sbc2.png">
-<strong>Caso 2: Envio do código de resposta para simular um dado recebido e verificar a decodificação dos comandos.</strong>
-<br>
+<strong>Caso 3: Envio do código de resposta para simular um dado recebido e verificar a decodificação dos comandos.</strong>
+
 Procedimentos: 
 <ol>
 <li>Envio do código de resposta de erro: 0x1F.
