@@ -24,7 +24,7 @@ int main(){
 	int uart_filestream = -1;
 	uart_filestream = open("/dev/serial0", O_RDWR | O_NOCTTY | O_NDELAY);	//Abre em modo escrita/leitura bloqueado
 	if (uart_filestream == -1){
-		printf("\nErro: nÃ£o Ã© possÃ­vel abrir o arquivo da UART.\n");
+		printf("\nErro: nao eh posssivel abrir o arquivo da UART.\n");
 	}
 	//Struct para configuracao dos parametros de comunicacao
 	struct termios options;
@@ -91,7 +91,7 @@ int main(){
 				printf("\n1 - DHT11\n");
 				scanf("%i", &sensor);
 		}
-		printf("Requisicao sendo enviada. Aguarde uns instantes");
+		printf("\nRequisicao sendo enviada. Aguarde uns instantes");
 		sleep(3);
 //----------------------------------------------------------------------------------------------------------------------------------
 //Leitura do byte de codigo de resposta	
@@ -125,7 +125,7 @@ int main(){
 					printf("%s ",dado); //Imprime valor da temperatura
 			 	}
 				else{
-					printf("Erro no formato de dado recebido);
+					printf("\n\nErro no formato de dado recebido);
 				}
 			}
 		}
